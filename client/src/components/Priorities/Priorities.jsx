@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InputAdornment from "@mui/material/InputAdornment";
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 
-import { handleChange } from "../../services/changesHandler"
+import { handleChange } from "../../services/changesHandler";
 
 const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
-  const [priority, setPriority] = useState(prioritiesList[0])
+  const [priority, setPriority] = useState(prioritiesList[0]);
 
   useEffect(() => {
-    if (value) {
-      setPriority(value)
+    if (value && value !== priority) {
+      setPriority(value);
     }
-  },[value])
+  }, [value, priority]);
 
   return (
     <Autocomplete
@@ -19,10 +24,9 @@ const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
       options={prioritiesList}
       openOnFocus
       clearOnEscape
-      defaultValue={prioritiesList[0]}
       value={priority}
-      onChange={(event, option)=>handleChange(event, option, setPriority, onPriorityChanged)}
-      sx={{width: '50% '}}
+      onChange={(event, option) => handleChange(event, option, setPriority, onPriorityChanged)}
+      sx={{ width: '50%' }}
       getOptionLabel={(option) => option.label ?? priority.label}
       isOptionEqualToValue={(option, value) => option.label === value.label}
       renderInput={(params) => (
@@ -33,7 +37,7 @@ const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
             ...params.InputProps,
             startAdornment: (
               <InputAdornment position="start">
-                {priority ? <WhatshotIcon sx={{color: priority.color}}/> : null}
+                {priority ? <WhatshotIcon sx={{ color: priority.color }} /> : null}
               </InputAdornment>
             ),
           }}
@@ -41,12 +45,14 @@ const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
       )}
       renderOption={(props, option) => (
         <ListItem {...props} key={option.label}>
-          <ListItemIcon>{<WhatshotIcon sx={{color: option.color}}/>}</ListItemIcon>
+          <ListItemIcon>
+            <WhatshotIcon sx={{ color: option.color }} />
+          </ListItemIcon>
           <ListItemText primary={option.label} />
         </ListItem>
       )}
     />
-  )
-}
+  );
+};
 
-export default Priorities
+export default Priorities;
