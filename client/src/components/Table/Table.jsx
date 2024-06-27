@@ -11,68 +11,54 @@ import { colors } from '../colors';
 import { deleteTaskHandler } from '../../services/DBService';
 import { openTaskForEdit } from '../../services/editTaskService';
 
-const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit}) => {
+const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
   useEffect(() => {
-    onUpdated(false)
-  }, [loading])
+    onUpdated(false);
+  }, [loading]);
 
   const getRowClassName = (params) => {
-    const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm')
-    const today = moment()
-    return dueDate.isBefore(today) ? 'row-overdue' : ''
-  }
+    const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm');
+    const today = moment();
+    return dueDate.isBefore(today) ? 'row-overdue' : '';
+  };
+
+  const renderPriorityCell = (params) => (
+    <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+      {<WhatshotIcon sx={{ color: params.row.priority.color }} />}
+      {params.row.priority.label}
+    </Box>
+  );
+
+  const renderStatusCell = (params) => (
+    <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+      {<CircleIcon sx={{ color: params.row.status.color }} />}
+      {params.row.status.label}
+    </Box>
+  );
+
+  const renderEditButton = (params) => (
+    <SmallButton
+      mode='edit'
+      onClick={() => openTaskForEdit(params.id, onEdit, onUpdated, onLoading)}
+    />
+  );
+
+  const renderDeleteButton = (params) => (
+    <SmallButton
+      mode='delete'
+      onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading)}
+    />
+  );
 
   const tableHeaders = [
     { field: 'title', headerName: 'TITLE', flex: 4, editable: false },
-    {
-      field: 'priority',
-      headerName: 'PRIORITY',
-      flex: 2,
-      editable: false,
-      renderCell: (params) => (
-        <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-          {<WhatshotIcon sx={{ color: params.row.priority.color }} />}
-          {params.row.priority.label}
-        </Box>
-      ),
-    },
+    { field: 'priority', headerName: 'PRIORITY', flex: 2, editable: false, renderCell: renderPriorityCell },
     { field: 'createdDate', headerName: "CREATED DATE", flex: 2, editable: false },
     { field: 'dueDate', headerName: 'END DATE', flex: 2, editable: false },
-    {
-      field: 'status',
-      headerName: 'STATUS',
-      flex: 2,
-      editable: true,
-      renderCell: (params) => (
-        <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-          {<CircleIcon sx={{ color: params.row.status.color}} />}
-          {params.row.status.label}
-        </Box>
-      ),
-    },
-    {
-      field: 'edit',
-      headerName: 'EDIT',
-      flex: 1,
-      renderCell: (params) => (
-        <SmallButton
-          mode='edit'
-          onClick={() => openTaskForEdit(params.id, onEdit, onUpdated, onLoading)}
-        />
-      ),
-    },
-    {
-      field: 'delete',
-      headerName: 'DELETE',
-      flex: 1,
-      renderCell: (params) => (
-        <SmallButton
-          mode='delete'
-          onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading)}
-        />
-      ),
-    },
-  ]
+    { field: 'status', headerName: 'STATUS', flex: 2, editable: true, renderCell: renderStatusCell },
+    { field: 'edit', headerName: 'EDIT', flex: 1, renderCell: renderEditButton },
+    { field: 'delete', headerName: 'DELETE', flex: 1, renderCell: renderDeleteButton },
+  ];
 
   return (
     <DataGrid
@@ -109,18 +95,16 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit}) => {
 
 export default TasksTable;
 
-const SmallButton = ({ onClick, mode }) => {
-  return (
-    <IconButton
-      sx={{
-        color: mode === 'delete' ? 'red' : 'green',
-        display: 'flex',
-        justifyContent: 'center',
-        height: '100%',
-      }}
-      onClick={onClick}
-    >
-      {mode === 'delete' ? <DeleteIcon /> : <EditIcon />}
-    </IconButton>
-  );
-};
+const SmallButton = ({ onClick, mode }) => (
+  <IconButton
+    sx={{
+      color: mode === 'delete' ? 'red' : 'green',
+      display: 'flex',
+      justifyContent: 'center',
+      height: '100%',
+    }}
+    onClick={onClick}
+  >
+    {mode === 'delete' ? <DeleteIcon /> : <EditIcon />}
+  </IconButton>
+);

@@ -1,21 +1,20 @@
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
-import CircleIcon from '@mui/icons-material/Circle'
-import { useEffect, useState } from "react"
+import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material";
+import CircleIcon from '@mui/icons-material/Circle';
+import { useEffect, useState } from "react";
 
 const Status = ({ statusesList, onStatusChanged, value }) => {
-  
-  const [status, setStatus] = useState(statusesList[0])
-
-  const handleChange = (event, newValue) => {
-    setStatus(newValue)
-    onStatusChanged(newValue)
-  }
+  const [status, setStatus] = useState(statusesList[0]);
 
   useEffect(() => {
-    if (value) {
-      setStatus(value)
+    if (value && value !== status) {
+      setStatus(value);
     }
-  },[value])
+  }, [value, status]);
+
+  const handleChange = (event, newValue) => {
+    setStatus(newValue);
+    onStatusChanged(newValue);
+  };
 
   return (
     <Autocomplete
@@ -30,12 +29,12 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Priority"
+          label="Status"
           InputProps={{
             ...params.InputProps,
             startAdornment: (
               <InputAdornment position="start">
-                {status ? <CircleIcon sx={{ color: status.color }}/> : null}
+                {status ? <CircleIcon sx={{ color: status.color }} /> : null}
               </InputAdornment>
             ),
           }}
@@ -43,14 +42,14 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
       )}
       renderOption={(props, option) => (
         <ListItem {...props} key={option.label}>
-          <ListItemIcon>{<CircleIcon sx={{ color: option.color }}/>}</ListItemIcon>
+          <ListItemIcon>
+            <CircleIcon sx={{ color: option.color }} />
+          </ListItemIcon>
           <ListItemText primary={option.label} />
         </ListItem>
       )}
-    >
+    />
+  );
+};
 
-    </Autocomplete>
-  )
-}
-
-export default Status
+export default Status;
