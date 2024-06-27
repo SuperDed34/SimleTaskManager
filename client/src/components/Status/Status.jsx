@@ -1,15 +1,17 @@
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material";
-import CircleIcon from '@mui/icons-material/Circle';
-import { useEffect, useState } from "react";
+import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
+import CircleIcon from '@mui/icons-material/Circle'
+import { useEffect, useState } from "react"
 
 const Status = ({ statusesList, onStatusChanged, value }) => {
-  const [status, setStatus] = useState(statusesList[0]);
+  const [status, setStatus] = useState(statusesList[0])
 
   useEffect(() => {
-    if (value && value !== status) {
+    if (value === null) {
+      setStatus(statusesList[0]);
+    } else if (value && value !== status) {
       setStatus(value);
     }
-  }, [value, status]);
+  }, [value, status])
 
   const handleChange = (event, newValue) => {
     setStatus(newValue);
@@ -21,7 +23,7 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
       id="setStatus"
       options={statusesList}
       onChange={handleChange}
-      value={status}
+      value={status !== null ? status : statusesList[0]}
       getOptionLabel={(option) => option.label ?? status.label}
       isOptionEqualToValue={(option, value) => option.label === value.label}
       openOnFocus
@@ -34,7 +36,7 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
             ...params.InputProps,
             startAdornment: (
               <InputAdornment position="start">
-                {status ? <CircleIcon sx={{ color: status.color }} /> : null}
+                {<CircleIcon sx={{ color: status==null? 'white' : status.color}}/>}
               </InputAdornment>
             ),
           }}
@@ -43,13 +45,13 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
       renderOption={(props, option) => (
         <ListItem {...props} key={option.label}>
           <ListItemIcon>
-            <CircleIcon sx={{ color: option.color }} />
+            <CircleIcon sx={{ color: option.color==null?'white':option.color }} />
           </ListItemIcon>
           <ListItemText primary={option.label} />
         </ListItem>
       )}
     />
-  );
-};
+  )
+}
 
-export default Status;
+export default Status

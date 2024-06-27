@@ -1,22 +1,24 @@
-import { useState, useEffect } from "react";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InputAdornment from "@mui/material/InputAdornment";
-import WhatshotIcon from '@mui/icons-material/Whatshot';
+import { useState, useEffect } from "react"
+import Autocomplete from "@mui/material/Autocomplete"
+import TextField from "@mui/material/TextField"
+import ListItem from "@mui/material/ListItem"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
+import InputAdornment from "@mui/material/InputAdornment"
+import WhatshotIcon from '@mui/icons-material/Whatshot'
 
-import { handleChange } from "../../services/changesHandler";
+import { handleChange } from "../../services/changesHandler"
 
 const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
-  const [priority, setPriority] = useState(prioritiesList[0]);
+  const [priority, setPriority] = useState(prioritiesList[0])
 
   useEffect(() => {
     if (value && value !== priority) {
-      setPriority(value);
+      value === null 
+        ? setPriority(prioritiesList[0])
+        : setPriority(value)
     }
-  }, [value, priority]);
+  }, [value, priority])
 
   return (
     <Autocomplete
@@ -24,7 +26,7 @@ const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
       options={prioritiesList}
       openOnFocus
       clearOnEscape
-      value={priority}
+      value={priority !== null ? priority : prioritiesList[0]}
       onChange={(event, option) => handleChange(event, option, setPriority, onPriorityChanged)}
       sx={{ width: '50%' }}
       getOptionLabel={(option) => option.label ?? priority.label}
@@ -52,7 +54,7 @@ const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
         </ListItem>
       )}
     />
-  );
-};
+  )
+}
 
 export default Priorities;

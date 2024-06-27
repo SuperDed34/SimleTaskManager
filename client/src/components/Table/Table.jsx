@@ -1,54 +1,54 @@
-import { useEffect } from 'react';
-import moment from 'moment';
-import { DataGrid } from '@mui/x-data-grid';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import CircleIcon from '@mui/icons-material/Circle';
-import { Box } from '@mui/material';
-import { colors } from '../colors';
-import { deleteTaskHandler } from '../../services/DBService';
-import { openTaskForEdit } from '../../services/editTaskService';
+import { useEffect } from 'react'
+import moment from 'moment'
+import { DataGrid } from '@mui/x-data-grid'
+import IconButton from '@mui/material/IconButton'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import WhatshotIcon from '@mui/icons-material/Whatshot'
+import CircleIcon from '@mui/icons-material/Circle'
+import { Box } from '@mui/material'
+import { colors } from '../colors'
+import { deleteTaskHandler } from '../../services/DBService'
+import { openTaskForEdit } from '../../services/editTaskService'
 
 const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
   useEffect(() => {
-    onUpdated(false);
-  }, [loading]);
+    onUpdated(false)
+  }, [loading])
 
   const getRowClassName = (params) => {
-    const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm');
-    const today = moment();
-    return dueDate.isBefore(today) ? 'row-overdue' : '';
-  };
+    const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm')
+    const today = moment()
+    return dueDate.isBefore(today) ? 'row-overdue' : ''
+  }
 
   const renderPriorityCell = (params) => (
     <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
       {<WhatshotIcon sx={{ color: params.row.priority.color }} />}
       {params.row.priority.label}
     </Box>
-  );
+  )
 
   const renderStatusCell = (params) => (
     <Box sx={{ height: '100%', alignItems: 'center', display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-      {<CircleIcon sx={{ color: params.row.status.color }} />}
-      {params.row.status.label}
-    </Box>
-  );
+      {<CircleIcon sx={{ color: params.row.status === null ? 'white' : params.row.status.color }} />}
+      {params.row.status === null ? 'Not started':params.row.status.label}
+    </Box>  
+  )
 
   const renderEditButton = (params) => (
     <SmallButton
       mode='edit'
       onClick={() => openTaskForEdit(params.id, onEdit, onUpdated, onLoading)}
     />
-  );
+  )
 
   const renderDeleteButton = (params) => (
     <SmallButton
       mode='delete'
       onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading)}
     />
-  );
+  )
 
   const tableHeaders = [
     { field: 'title', headerName: 'TITLE', flex: 4, editable: false },
@@ -58,7 +58,7 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
     { field: 'status', headerName: 'STATUS', flex: 2, editable: true, renderCell: renderStatusCell },
     { field: 'edit', headerName: 'EDIT', flex: 1, renderCell: renderEditButton },
     { field: 'delete', headerName: 'DELETE', flex: 1, renderCell: renderDeleteButton },
-  ];
+  ]
 
   return (
     <DataGrid
@@ -90,8 +90,8 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
       disableRowSelectionOnClick
       hideFooterSelectedRowCount
     />
-  );
-};
+  )
+}
 
 export default TasksTable;
 
@@ -107,4 +107,4 @@ const SmallButton = ({ onClick, mode }) => (
   >
     {mode === 'delete' ? <DeleteIcon /> : <EditIcon />}
   </IconButton>
-);
+)
