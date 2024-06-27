@@ -1,7 +1,8 @@
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material";
-import { useState } from "react"
+import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
+import CircleIcon from '@mui/icons-material/Circle'
+import { useEffect, useState } from "react"
 
-const Status = ({ statusesList, onStatusChanged }) => {
+const Status = ({ statusesList, onStatusChanged, value }) => {
   
   const [status, setStatus] = useState(statusesList[0])
 
@@ -10,6 +11,12 @@ const Status = ({ statusesList, onStatusChanged }) => {
     onStatusChanged(newValue)
   }
 
+  useEffect(() => {
+    if (value) {
+      setStatus(value)
+    }
+  },[value])
+
   return (
     <Autocomplete
       id="setStatus"
@@ -17,6 +24,7 @@ const Status = ({ statusesList, onStatusChanged }) => {
       onChange={handleChange}
       value={status}
       getOptionLabel={(option) => option.label ?? status.label}
+      isOptionEqualToValue={(option, value) => option.label === value.label}
       openOnFocus
       clearOnEscape
       renderInput={(params) => (
@@ -27,7 +35,7 @@ const Status = ({ statusesList, onStatusChanged }) => {
             ...params.InputProps,
             startAdornment: (
               <InputAdornment position="start">
-                {status ? status.icon : null}
+                {status ? <CircleIcon sx={{ color: status.color }}/> : null}
               </InputAdornment>
             ),
           }}
@@ -35,7 +43,7 @@ const Status = ({ statusesList, onStatusChanged }) => {
       )}
       renderOption={(props, option) => (
         <ListItem {...props} key={option.label}>
-          <ListItemIcon>{option.icon}</ListItemIcon>
+          <ListItemIcon>{<CircleIcon sx={{ color: option.color }}/>}</ListItemIcon>
           <ListItemText primary={option.label} />
         </ListItem>
       )}

@@ -13,45 +13,52 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import moment from 'moment'
 import 'moment/locale/en-gb';
 import Priorities from '../Priorities/Priorities'
-
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import CircleIcon from '@mui/icons-material/Circle';
 import Status from '../Status/Status'
-import { addTaskHandler } from '../../services/DBService'
+import { addTaskHandler, editTaskHandler } from '../../services/DBService'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
-
+//Trought normalization priorities and statuses lists values should been taken from DB
 const priorities = [
-  { label: 'none', icon: <WhatshotIcon color='action'/> },
-  { label: 'Low', icon: <WhatshotIcon sx={{color: 'green'}}/> },
-  { label: 'Medium', icon: <WhatshotIcon sx={{color: 'yellow'}}/>  },
-  { label: 'High', icon: <WhatshotIcon sx={{color: 'orange'}}/>  },
-  { label: 'Critical', icon: <WhatshotIcon sx={{color: 'red'}}/>  }
+  { label: 'none', color: 'action' },
+  { label: 'Low', color: 'green' },
+  { label: 'Medium',color: 'yellow'},
+  { label: 'High',color: 'orange'},
+  { label: 'Critical',color: 'red'}
 ]
 
 const statuses = [
-  { label: 'Not started', icon: <CircleIcon sx={{ color: 'white' }}/> },
-  { label: 'Started', icon: <CircleIcon sx={{ color: 'violet' }} /> },
-  { label: 'Working', icon: <CircleIcon sx={{ color: 'skyblue' }} /> },
-  { label: 'Held', icon: <CircleIcon sx={{ color: 'yellow' }} /> },
-  { label: 'Complete', icon: <CircleIcon sx={{color: 'green'}}/>}
+  { label: 'Not started',color: 'white'},
+  { label: 'Started',color: 'violet' },
+  { label: 'Working',color: 'skyblue' },
+  { label: 'Held', color: 'yellow' },
+  { label: 'Complete', color: 'green'}
 ]
 
 const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
   const [open, setOpen] = useState(false)
-  const [form, setForm] = useState()
-
-  const handleClickOpen = () => {
-    setForm({
-      title: '',
-      createdDate: '',
-      dueDate: '',
+  const [form, setForm] = useState({
+      title:  '',
+      createdDate:'',
+      dueDate: {},
       priority: priorities[0],
       status: statuses[0],
-      description:''
-      })
+      description: ''
+  })
+  const [mode, setMode] = useState('')
+
+  const handleClickOpen = (task = undefined, mode='new', id=undefined) => {
+    setForm({
+      id: id,
+      title: task ? task.title : '',
+      createdDate: task.createdDate ?? '',
+      dueDate: task.dueDate ?? {},
+      priority: task.priority ?? priorities[0],
+      status: task.status ?? statuses[0],
+      description: task.description ?? ''
+    })
+    mode === 'new' ? setMode('new') : setMode('change')
     setOpen(true)
   }
 
@@ -67,7 +74,7 @@ const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
     setForm({...form, status: newStatus})
   }
 
-  const handleChange = (event) => {
+  const updateForm = (event) => {
     setForm({
       ...form,
       [event.target
@@ -97,11 +104,12 @@ const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
         },
       }}
     >
-      <DialogTitle>New Task</DialogTitle>
+      <DialogTitle>{mode === 'new' ? 'New Task' : `Change task : ${form.title}`}</DialogTitle>
       <DialogContent>
         <Stack spacing={2}>
           <TextField
             autoFocus
+            value={form.title ?? ''}
             required
             margin='dense'
             id='taskTitle'
@@ -111,7 +119,7 @@ const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
             fullWidth
             variant='standard'
             size='small'
-            onChange={handleChange}
+            onChange={updateForm}
           />
           <Divider variant='inset' sx={{ height: 1 }} />
           <Stack
@@ -120,28 +128,31 @@ const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
             alignItems="stretch"
             justifyContent={'space-between'}>
             <DateTimePicker
-                id='datePicker'
-                name='dueDate'
-                label='Choose End date'
-                size='small'
-                format='DD/MM/YYYY HH:mm'
-                onChange={handleChange}
+              id='datePicker'
+              name='dueDate'
+              value={moment(form.dueDate, 'DD/MM/YYYY HH:mm') ?? {}}
+              label='Choose End date'
+              size='small'
+              format='DD/MM/YYYY HH:mm'
+              onChange={updateForm}
             />
             <Priorities
               required
               name='priority'
+              value={form.priority}
               prioritiesList={priorities}
               onPriorityChanged={handlePriorityChange}
-              onChange={handleChange}
+              onChange={updateForm}
                />
           </Stack>
           <Divider variant='inset' sx={{ height: 1 }} />
           <Status
             required
             name='status'
+            value={form.status}
             statusesList={statuses}
             onStatusChanged={handleStatusChange}
-            onChange={handleChange}
+            onChange={updateForm}
           />
           <Divider variant='inset' sx={{ height: 1 }} />
           <TextField
@@ -151,13 +162,23 @@ const TaskWindow = ({clickHandler, onUpdated, onLoading}) => {
             multiline
             rows={4}
             variant="filled"
-            onChange={handleChange}
+            value={form.description}
+            onChange={updateForm}
           />
         </Stack>
         </DialogContent>
       <DialogActions>
-          <Button onClick={handleClickClose}>Cancel</Button>
-        <Button onClick={() => addTaskHandler({ ...form, createdDate: moment().format('DD/MM/YYYY HH:mm')}, onUpdated, onLoading)}type="submit">Add</Button>
+        <Button onClick={handleClickClose}>Cancel</Button>
+        { mode ==='new'
+          ? (<Button onClick={() => {
+            addTaskHandler({ ...form, createdDate: moment().format('DD/MM/YYYY HH:mm') }, onUpdated, onLoading)
+          }
+          } type="submit">Add</Button>)
+          : (<Button onClick={() => {
+            editTaskHandler(form.id, form, onUpdated, onLoading)
+          }
+          } type="submit">Save</Button>)
+        }
       </DialogActions>
     </Dialog>
     )

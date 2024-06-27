@@ -11,7 +11,6 @@ const TaskDashboard = () => {
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   const [updated, setUpdated] = useState(false)
-  console.log(updated, loading)
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -49,7 +48,8 @@ const TaskDashboard = () => {
           tasks={tasks}
           loading={loading}
           onLoading={setLoading}
-          onUpdated={setUpdated} />
+          onUpdated={setUpdated}
+          onEdit={clickHandler} />
       </Grid>
       <TaskWindow
         clickHandler={handleTaskWindowClick}

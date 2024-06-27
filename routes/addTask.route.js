@@ -4,7 +4,6 @@ const Task = require('../models/Tasks')
 
 router.post('/add-task', async (req, res) => {
   try {
-    console.log(req.body)
     const {
       title,
       createdDate,

@@ -26,7 +26,37 @@ export const deleteTaskHandler = async (taskId, onUpdated, onLoading) => {
   }
 }
 
-export const changeTaskHandler = async (taskId, onUpdated, onLoading) => {
-  
+export const getTask = async(taskId) => {
+  try {
+    const response = await axios.get(`/api/getTask/get-task/${taskId}`)
+    return response.data
+  } catch (error) {
+    console.error('Error getting task:', error)
+    throw error
+  }
+}
+
+export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading) => {
+  onLoading(true)
+  try {
+    const response = await axios.post(`/api/editTask/edit-task/${taskId}`, updatedData, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      onUpdated(true)
+    })
+
+    if (!response) {
+      console.log('no res ' + response)
+      return
+    }
+    
+    console.log('Task updated:', response)
+
+  } catch (error) {
+    onLoading(false)
+    console.error(error)
+  }
 }
 

@@ -1,13 +1,17 @@
-import { useState } from "react";
-import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
-const Priorities = ({ prioritiesList, onPriorityChanged }) => {
-  const [priority, setPriority] = useState(prioritiesList[0]);
+import { handleChange } from "../../services/changesHandler"
 
-  const handleChange = (event, newValue) => {
-    setPriority(newValue);
-    onPriorityChanged(newValue)
-  };
+const Priorities = ({ prioritiesList, onPriorityChanged, value }) => {
+  const [priority, setPriority] = useState(prioritiesList[0])
+
+  useEffect(() => {
+    if (value) {
+      setPriority(value)
+    }
+  },[value])
 
   return (
     <Autocomplete
@@ -17,9 +21,10 @@ const Priorities = ({ prioritiesList, onPriorityChanged }) => {
       clearOnEscape
       defaultValue={prioritiesList[0]}
       value={priority}
-      onChange={handleChange}
+      onChange={(event, option)=>handleChange(event, option, setPriority, onPriorityChanged)}
       sx={{width: '50% '}}
       getOptionLabel={(option) => option.label ?? priority.label}
+      isOptionEqualToValue={(option, value) => option.label === value.label}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -28,7 +33,7 @@ const Priorities = ({ prioritiesList, onPriorityChanged }) => {
             ...params.InputProps,
             startAdornment: (
               <InputAdornment position="start">
-                {priority ? priority.icon : null}
+                {priority ? <WhatshotIcon sx={{color: priority.color}}/> : null}
               </InputAdornment>
             ),
           }}
@@ -36,7 +41,7 @@ const Priorities = ({ prioritiesList, onPriorityChanged }) => {
       )}
       renderOption={(props, option) => (
         <ListItem {...props} key={option.label}>
-          <ListItemIcon>{option.icon}</ListItemIcon>
+          <ListItemIcon>{<WhatshotIcon sx={{color: option.color}}/>}</ListItemIcon>
           <ListItemText primary={option.label} />
         </ListItem>
       )}
@@ -44,4 +49,4 @@ const Priorities = ({ prioritiesList, onPriorityChanged }) => {
   )
 }
 
-export default Priorities;
+export default Priorities
