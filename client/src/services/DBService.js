@@ -1,42 +1,49 @@
 import axios from "axios"
   
-export const addTaskHandler = async (task, onUpdated, onLoading) => {
+export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) => {
   try {
     onLoading(true)
     await axios.post('/api/tasks/add-task', task, {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response=>onUpdated(true))   
+    }).then(response => {
+      setSnackbar({open: true, text: 'Task successfully added', severity: 'success'})
+      
+      onUpdated(true)
+    })   
   } catch (error) {
+    setSnackbar({open: true, text: `Error while add a task: ${error}`, severity: 'error'})
     console.log(error)
   }
 }
 
 
-export const deleteTaskHandler = async (taskId, onUpdated, onLoading) => {
+export const deleteTaskHandler = async (taskId, onUpdated, onLoading, setSnackbar) => {
   try {
     const response = await axios.delete(`/api/delete-task/${taskId}`)
     onUpdated(true)
     onLoading(true)
+    setSnackbar({open: true, text: 'Task successfully removed', severity: 'success'})
     return response.data
   } catch (error) {
     console.error('Error deleting task:', error)
+    setSnackbar({open: true, text: `Error deleting task: ${error}`, severity: 'error'})
     throw error
   }
 }
 
-export const getTask = async (taskId) => {
+export const getTask = async (taskId, setSnackbar) => {
   try {
-    const response = await axios.get(`/api/getTask/get-task/${taskId}`)
+    const response = await axios.get(`/api/getTask/get-task/${taskId}1`)
     return response.data
   } catch (error) {
-    console.error('Error getting task:', error)
+    setSnackbar({open: true, text: `Error while get a task: ${error}`, severity: 'error'})
     throw error
   }
 }
 
-export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading) => {
+export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading, setSnackbar) => {
   onLoading(true)
   try {
     const response = await axios.post(`/api/editTask/edit-task/${taskId}`, updatedData, {
@@ -44,18 +51,14 @@ export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading)
         'Content-Type': 'application/json'
       }
     }).then(response => {
+      console.log(response)
+      setSnackbar({open: true, text: 'Task successfully edited', severity: 'success'})
       onUpdated(true)
     })
 
-    if (!response) {
-      console.log('no res ' + response)
-      return
-    }
-    
-    console.log('Task updated:', response)
-
   } catch (error) {
     onLoading(false)
+    setSnackbar({open: true, text: `Error while editing a task: ${error}`, severity: 'error'})
     console.error(error)
   }
 }

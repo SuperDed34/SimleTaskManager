@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import {
     createBrowserRouter,
@@ -11,11 +11,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import 'moment/locale/en-gb'
 
-
 import TaskDashboard from './pages/Main/TaskDashboard'
 import ErrorPage from './pages/Error/ErrorPage'
 
 import './main.css'
+
 
 const router = createBrowserRouter([
     {
@@ -36,11 +36,12 @@ const darkTheme = createTheme({
   },
 })
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='en-gb'>
         <ThemeProvider theme={darkTheme}>
             <CssBaseline/>
-            <RouterProvider router={router}/>
+            <RouterProvider router={router} />
         </ThemeProvider>
     </LocalizationProvider>
 )

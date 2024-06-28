@@ -11,7 +11,7 @@ import { colors } from '../colors'
 import { deleteTaskHandler } from '../../services/DBService'
 import { openTaskForEdit } from '../../services/editTaskService'
 
-const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
+const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar }) => {
   useEffect(() => {
     onUpdated(false)
   }, [loading])
@@ -39,14 +39,14 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
   const renderEditButton = (params) => (
     <SmallButton
       mode='edit'
-      onClick={() => openTaskForEdit(params.id, onEdit, onUpdated, onLoading)}
+      onClick={() => openTaskForEdit(params.id, onEdit, setSnackbar)}
     />
   )
 
   const renderDeleteButton = (params) => (
     <SmallButton
       mode='delete'
-      onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading)}
+      onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading, setSnackbar)}
     />
   )
 

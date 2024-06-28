@@ -6,12 +6,15 @@ import Toolbar from '../../components/Toolbar/Toolbar';
 import TaskWindow from '../../components/TaskWindow/TaskWindow';
 import { useEffect, useState } from 'react';
 import { filterContent } from '../../services/DBService';
+import CustomSnackbar from '../../components/CustomSnackbar/CustomSnackbar';
 
 const TaskDashboard = ({mode}) => {
   const [clickHandler, setClickHandler] = useState(null)
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   const [updated, setUpdated] = useState(false)
+  const [snackbar, setSnackbar] = useState({open: false, text: '', severity: ''})
+
   useEffect(() => {
     const fetchTasks = async () => {
       setLoading(true)
@@ -22,6 +25,7 @@ const TaskDashboard = ({mode}) => {
         setUpdated(false)
       } catch (error) {
         console.error('Error fetching tasks:', error)
+        setSnackbar({open: true, text: `Here is problem:${error}`, severity:'danger'})
         setLoading(false)
       }
     }
@@ -31,9 +35,14 @@ const TaskDashboard = ({mode}) => {
 
   const handleTaskWindowClick = (handler) => {
     setClickHandler(handler)
-  };
+  }
+
+  const handleSnackbarClose = () => {
+    setSnackbar({ open: false, text: '', severity: '' })
+  } 
 
   return (
+    <>            
     <Grid
       container
       spacing={1}
@@ -51,14 +60,24 @@ const TaskDashboard = ({mode}) => {
           loading={loading}
           onLoading={setLoading}
           onUpdated={setUpdated}
-          onEdit={clickHandler} />
+            onEdit={clickHandler}
+            setSnackbar={setSnackbar}
+          />
       </Grid>
       <TaskWindow
         clickHandler={handleTaskWindowClick}
         onUpdated={setUpdated}
-        onLoading={setLoading}
+          onLoading={setLoading}
+          setSnackbar={setSnackbar}
         />
-    </Grid>
+      </Grid>
+      <CustomSnackbar
+        open={snackbar.open}
+        text={snackbar.text}
+        severity={snackbar.severity}
+        onClose={handleSnackbarClose}
+      />
+    </>
   );
 };
 

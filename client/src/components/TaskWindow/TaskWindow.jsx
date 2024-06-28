@@ -37,7 +37,7 @@ const statuses = [
   { label: 'Complete', color: 'green' }
 ]
 
-const TaskWindow = ({ clickHandler, onUpdated, onLoading }) => {
+const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -87,13 +87,6 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading }) => {
       TransitionComponent={Transition}
       fullWidth
       aria-describedby="alert-dialog-slide-description"
-      PaperProps={{
-        component: 'form',
-        onSubmit: (event) => {
-          event.preventDefault()
-          handleClickClose()
-        }
-      }}
     >
       <DialogTitle>
         {mode === 'new' ? 'New Task' : `Change task: ${form.title}`}
@@ -169,19 +162,19 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading }) => {
               addTaskHandler(
                 { ...form, createdDate: moment().format('DD/MM/YYYY HH:mm') },
                 onUpdated,
-                onLoading
+                onLoading,
+                setSnackbar
               )
             }}
-            type="submit"
           >
             Add
           </Button>
         ) : (
           <Button
             onClick={() => {
-              editTaskHandler(form.id, form, onUpdated, onLoading)
+                editTaskHandler(form.id, form, onUpdated, onLoading, setSnackbar)
+                setOpen(false)
             }}
-            type="submit"
           >
             Save
           </Button>

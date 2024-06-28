@@ -1,6 +1,6 @@
 const Task = require('../models/task.model')
 
-exports.addTask = async (req, res) => {
+exports.addTask = async (req, res, next) => {
   try {
     const { title, createdDate, dueDate, priority, status, description } = req.body
 
@@ -8,6 +8,7 @@ exports.addTask = async (req, res) => {
     await task.save();
     res.status(201).json({ message: 'Task was created and saved', task })
   } catch (error) {
+    next(error)
     console.error(error)
     res.status(400).json({ message: 'Task wasn\'t created, error: ' + error.message })
   }
