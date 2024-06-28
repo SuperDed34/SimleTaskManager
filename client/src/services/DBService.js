@@ -26,7 +26,7 @@ export const deleteTaskHandler = async (taskId, onUpdated, onLoading) => {
   }
 }
 
-export const getTask = async(taskId) => {
+export const getTask = async (taskId) => {
   try {
     const response = await axios.get(`/api/getTask/get-task/${taskId}`)
     return response.data
@@ -60,3 +60,17 @@ export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading)
   }
 }
 
+export const filterContent = (response, filterCriteria = 'Complete', mode = 'exclude') => {
+  let res = []
+  response.map(item => {
+    const modes = {
+    exclude: item.status.label !== filterCriteria,
+    include: item.status.label === filterCriteria
+    }
+    if (modes[mode]) {
+      res.push(item)
+      return item
+    }
+  })
+  return res
+}

@@ -19,7 +19,7 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit }) => {
   const getRowClassName = (params) => {
     const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm')
     const today = moment()
-    return dueDate.isBefore(today) ? 'row-overdue' : ''
+    return dueDate.isSameOrAfter(today)? '' : 'row-overdue'
   }
 
   const renderPriorityCell = (params) => (

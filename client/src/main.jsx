@@ -19,10 +19,15 @@ import './main.css'
 
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <TaskDashboard/>,
+        path: ('/' || '/uncompleted'),
+        element: <TaskDashboard mode='main'/>,
         errorElement: <ErrorPage/>
-    }
+    },
+    {
+        path: '/completed',
+        element: <TaskDashboard mode='completed'/>,
+        errorElement: <ErrorPage/>
+    },
 ])
 
 const darkTheme = createTheme({

@@ -4,8 +4,10 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 
 import AddTaskIcon from '@mui/icons-material/AddTask'
+import { Divider } from '@mui/material'
+import { Link } from 'react-router-dom'
 
-const Toolbar = ({clickHandler}) => {
+const Toolbar = ({clickHandler, mode}) => {
   return (
     <Grid
       container
@@ -15,13 +17,23 @@ const Toolbar = ({clickHandler}) => {
       }}
     >
       <Grid item>
-        <Button
+        <Stack direction={'row'} spacing={2}>
+          <Button
           variant='contained'
           color='success'
           startIcon={<AddTaskIcon />}
           onClick={clickHandler}>
             Add task
-        </Button>
+          </Button>
+          <Divider orientation='vertical' variant='middle' size='small' flexItem/>
+          <Button
+            variant='contained'
+            color='primary'>
+            {mode === 'main'
+              ? <Link style={{textDecoration:'none', color:'inherit'}} to={'/completed'}>Show Completed</Link>
+              : <Link style={{textDecoration:'none', color:'inherit'}} to={'/'}>Show Uncompleted</Link>}
+          </Button>
+        </Stack>
       </Grid>
       <Grid item>
         
