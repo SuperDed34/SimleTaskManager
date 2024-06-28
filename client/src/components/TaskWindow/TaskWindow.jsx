@@ -10,7 +10,8 @@ import {
   Stack,
   Slide
 } from '@mui/material'
-import { DateTimePicker } from '@mui/x-date-pickers'
+import { MobileDateTimePicker} from '@mui/x-date-pickers'
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import moment from 'moment'
 import 'moment/locale/en-gb'
 import Priorities from '../Priorities/Priorities'
@@ -54,7 +55,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
       id: id || '',
       title: task.title || '',
       createdDate: task.createdDate || '',
-      dueDate: task.dueDate || {},
+      dueDate: task.dueDate || moment().set({hour:23, minute:59}).format('DD/MM/YYYY HH:mm'),
       priority: task.priority || priorities[0],
       status: task.status || statuses[0],
       description: task.description || ''
@@ -66,6 +67,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
   const handleClickClose = () => setOpen(false)
 
   const handlePriorityChange = (newPriority) => setForm({ ...form, priority: newPriority })
+  
   const handleStatusChange = (newStatus) => setForm({ ...form, status: newStatus })
 
   const updateForm = (event) => {
@@ -114,14 +116,19 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
             alignItems="stretch"
             justifyContent='space-between'
           >
-            <DateTimePicker
+            <MobileDateTimePicker
               id='datePicker'
               name='dueDate'
               value={moment(form.dueDate, 'DD/MM/YYYY HH:mm')}
               label='Choose End date'
-              size='small'
               format='DD/MM/YYYY HH:mm'
+              ampm={false}
               onChange={updateForm}
+              viewRenderers={{
+            hours: renderTimeViewClock,
+            minutes: renderTimeViewClock,
+            seconds: renderTimeViewClock,
+          }}
             />
             <Priorities
               required
