@@ -1,7 +1,7 @@
 const Task = require('../models/task.model')
 
-exports.getTask = async (req, res) => {
-  const taskId = req.params.id;
+exports.getTask = async (req, res, next) => {
+  const taskId = req.params.id
   try {
     const task = await Task.findById(taskId);
     if (!task) {
@@ -9,7 +9,6 @@ exports.getTask = async (req, res) => {
     }
     res.json(task);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: 'Internal server error: ' + error.message })
+    next(error)
   }
-};
+}

@@ -9,12 +9,11 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) =>
       }
     }).then(response => {
       setSnackbar({open: true, text: 'Task successfully added', severity: 'success'})
-      
       onUpdated(true)
     })   
   } catch (error) {
-    setSnackbar({open: true, text: `Error while add a task: ${error}`, severity: 'error'})
-    console.log(error)
+    setSnackbar({open: true, text: `Error while add a task: ${error.response.data.message}`, severity: 'error'})
+    onLoading(false)
   }
 }
 
@@ -35,10 +34,10 @@ export const deleteTaskHandler = async (taskId, onUpdated, onLoading, setSnackba
 
 export const getTask = async (taskId, setSnackbar) => {
   try {
-    const response = await axios.get(`/api/getTask/get-task/${taskId}1`)
+    const response = await axios.get(`/api/getTask/get-task/${taskId}`)
     return response.data
   } catch (error) {
-    setSnackbar({open: true, text: `Error while get a task: ${error}`, severity: 'error'})
+    setSnackbar({open: true, text: `Error while get a task: ${error.response.data.message}`, severity: 'error'})
     throw error
   }
 }
@@ -58,7 +57,7 @@ export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading,
 
   } catch (error) {
     onLoading(false)
-    setSnackbar({open: true, text: `Error while editing a task: ${error}`, severity: 'error'})
+    setSnackbar({open: true, text: `${error.response.data.message}`, severity: 'error'})
     console.error(error)
   }
 }

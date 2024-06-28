@@ -165,6 +165,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
                 onLoading,
                 setSnackbar
               )
+              setOpen(false)
             }}
           >
             Add
