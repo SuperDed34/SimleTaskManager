@@ -11,15 +11,18 @@ import { colors } from '../colors'
 import { deleteTaskHandler } from '../../services/DBService'
 import { openTaskForEdit } from '../../services/editTaskService'
 
-const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar }) => {
+const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar, mode }) => {
   useEffect(() => {
     onUpdated(false)
   }, [loading])
 
   const getRowClassName = (params) => {
     const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm')
+    const completeDate = params.row.status.completeDate ?  moment(params.row.status.completeDate, 'DD/MM/YYYY HH:mm') : ''
     const today = moment()
-    return dueDate.isSameOrAfter(today)? '' : 'row-overdue'
+    return (completeDate !== ''
+      ? dueDate.isSameOrAfter(completeDate) ? '' : 'row-overdue'
+      : dueDate.isSameOrAfter(today) ? '' : 'row-overdue')
   }
 
   const renderPriorityCell = (params) => (
@@ -50,6 +53,12 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar 
     />
   )
 
+  const renderCompletedDate = (params) => (
+    <>
+      {params.row.status.completeDate}
+    </>  
+  )
+
   const tableHeaders = [
     { field: 'title', headerName: 'TITLE', flex: 4, editable: false },
     { field: 'priority', headerName: 'PRIORITY', flex: 2, editable: false, renderCell: renderPriorityCell },
@@ -59,6 +68,12 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar 
     { field: 'edit', headerName: 'EDIT', flex: 1, renderCell: renderEditButton },
     { field: 'delete', headerName: 'DELETE', flex: 1, renderCell: renderDeleteButton },
   ]
+
+  const tableHeaderCompletedDate = [
+    { field: 'completedDate', headerName: 'COMPLETED AT', flex: 2, renderCell: renderCompletedDate },
+  ]
+
+  const headers = mode === 'completed' ? [...tableHeaders, ...tableHeaderCompletedDate] : tableHeaders
 
   return (
     <DataGrid
@@ -74,7 +89,7 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar 
         },
       }}
       rows={tasks}
-      columns={tableHeaders}
+      columns={headers}
       getRowId={(row) => row._id}
       getRowClassName={getRowClassName}
       initialState={{

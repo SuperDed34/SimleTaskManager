@@ -50,7 +50,6 @@ export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading,
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      console.log(response)
       setSnackbar({open: true, text: 'Task successfully edited', severity: 'success'})
       onUpdated(true)
     })

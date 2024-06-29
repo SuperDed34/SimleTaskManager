@@ -20,6 +20,7 @@ const TaskDashboard = ({mode}) => {
       setLoading(true)
       try {
         const response = await axios.get('/api/getTasks/get-tasks')
+        console.log(response.data)
         setTasks(mode === 'main' ? filterContent(response.data) : filterContent(response.data, 'Complete' ,'include'))
         setLoading(false)
         setUpdated(false)
@@ -62,6 +63,7 @@ const TaskDashboard = ({mode}) => {
           onUpdated={setUpdated}
             onEdit={clickHandler}
             setSnackbar={setSnackbar}
+            mode={mode}
           />
       </Grid>
       <TaskWindow

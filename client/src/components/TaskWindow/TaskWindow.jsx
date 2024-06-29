@@ -49,19 +49,25 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
     description: ''
   })
   const [mode, setMode] = useState('new')
-
+//
   const handleClickOpen = (task = {}, mode = 'new', id) => {
     setForm({
       id: id || '',
       title: task.title || '',
       createdDate: task.createdDate || '',
-      dueDate: task.dueDate || moment().set({hour:23, minute:59}).format('DD/MM/YYYY HH:mm'),
+      dueDate: task.dueDate || {},
       priority: task.priority || priorities[0],
       status: task.status || statuses[0],
       description: task.description || ''
     })
     setMode(mode)
     setOpen(true)
+  }
+
+  const handleInitialValueForClock = () => {
+    form.dueDate instanceof Object 
+      ? setForm({ ...form, dueDate: moment().set({ hour: 23, minute: 59 }).format('DD/MM/YYYY HH:mm') })
+      : null
   }
 
   const handleClickClose = () => setOpen(false)
@@ -124,10 +130,10 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
               format='DD/MM/YYYY HH:mm'
               ampm={false}
               onChange={updateForm}
+              onOpen={handleInitialValueForClock}
               viewRenderers={{
             hours: renderTimeViewClock,
             minutes: renderTimeViewClock,
-            seconds: renderTimeViewClock,
           }}
             />
             <Priorities

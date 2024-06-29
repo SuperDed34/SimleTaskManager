@@ -1,6 +1,7 @@
 import { Autocomplete, TextField, ListItem, ListItemIcon, ListItemText, InputAdornment } from "@mui/material"
 import CircleIcon from '@mui/icons-material/Circle'
 import { useEffect, useState } from "react"
+import moment from "moment"
 
 const Status = ({ statusesList, onStatusChanged, value }) => {
   const [status, setStatus] = useState(statusesList[0])
@@ -14,9 +15,10 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
   }, [value, status])
 
   const handleChange = (event, newValue) => {
-    setStatus(newValue);
-    onStatusChanged(newValue);
-  };
+    newValue = newValue.label !== 'Complete' ? { ...newValue} : {...newValue, completeDate: moment().format('DD/MM/YYYY HH:mm')}
+    setStatus(newValue)
+    onStatusChanged(newValue)
+  }
 
   return (
     <Autocomplete
