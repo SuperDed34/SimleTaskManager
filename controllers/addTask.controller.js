@@ -31,10 +31,7 @@ exports.addTask = async (req, res, next) => {
 
     if (!(dueDate instanceof Object) && !dateTimeFormatRegex.test(dueDate)) {
       throw new TypeError('Due date must be a string in format DD/MM/YYYY HH:ss') 
-    } 
-
-    console.log(typeof dueDate)
-  
+    }
 
     const task = new Task({ title, createdDate, dueDate, priority, status, description })
     await task.save();

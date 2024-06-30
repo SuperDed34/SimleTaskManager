@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import moment from 'moment'
 import { DataGrid } from '@mui/x-data-grid'
-import IconButton from '@mui/material/IconButton'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
 import CircleIcon from '@mui/icons-material/Circle'
 import { Box } from '@mui/material'
 import { colors } from '../colors'
 import { openTaskForEdit } from '../../services/editTaskService'
+import NoTasks from './slots/NoTasks'
 
 const TasksTable = ({
   tasks,
@@ -81,17 +79,19 @@ const TasksTable = ({
           bgcolor: 'rgba(255, 0, 0, 0.3)',
         },
       }}
+      slots={{
+        noRowsOverlay:NoTasks 
+      }}
       rows={tasks}
-      onRowClick={(params) => {
-        openTaskForEdit(params.id, onEdit, setSnackbar)
-      }}
-
-      onRowSelectionModelChange={(model) => {
-        setChosenCells(model)
-      }}
       columns={headers}
       getRowId={(row) => row._id}
       getRowClassName={getRowClassName}
+      onRowClick={(params) => {
+        openTaskForEdit(params.id, onEdit, setSnackbar)
+      }}
+      onRowSelectionModelChange={(model) => {
+        setChosenCells(model)
+      }}
       initialState={{
         pagination: {
           paginationModel: {
@@ -100,7 +100,7 @@ const TasksTable = ({
         },
       }}
       rowHeight={35}
-      pageSizeOptions={[5, 10, 15]}
+      pageSizeOptions={[5, 10, 15, 50, 100]}
       checkboxSelection
       disableRowSelectionOnClick
       hideFooterSelectedRowCount
