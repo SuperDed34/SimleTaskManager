@@ -18,7 +18,6 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) =>
   }
 }
 
-
 export const deleteTaskHandler = async (taskId, onUpdated, onLoading, setSnackbar) => {
   try {
     const response = await axios.delete(`/api/delete-task/${taskId}`)
