@@ -11,7 +11,6 @@ import NoTasks from './slots/NoTasks'
 const TasksTable = ({
   tasks,
   loading,
-
   onUpdated,
   onEdit,
   setChosenCells,
@@ -24,12 +23,15 @@ const TasksTable = ({
   }, [loading])
 
   const getRowClassName = (params) => {
-    const dueDate = moment(params.row.dueDate, 'DD/MM/YYYY HH:mm')
+    const dueDate = params.row.dueDate ? moment(params.row.dueDate, 'DD/MM/YYYY HH:mm') : ''
     const completeDate = params.row.status.completeDate ?  moment(params.row.status.completeDate, 'DD/MM/YYYY HH:mm') : ''
     const today = moment()
-    return (completeDate !== ''
+    return (completeDate !== '' && dueDate
       ? dueDate.isSameOrAfter(completeDate) ? '' : 'row-overdue'
-      : dueDate.isSameOrAfter(today) ? '' : 'row-overdue')
+      : !dueDate
+        ? ''
+        : dueDate.isSameOrAfter(today) ? '' : 'row-overdue'
+      )
   }
 
   const renderPriorityCell = (params) => (
@@ -72,6 +74,7 @@ const TasksTable = ({
       sx={{
         height: '82vh',
         bgcolor: colors.componentBg,
+        outline: 'none',
         '.MuiDataGrid-columnHeader': {
           bgcolor: colors.componentBg,
         },
@@ -112,6 +115,8 @@ const TasksTable = ({
       hideFooterSelectedRowCount
       disableColumnFilter
       disableColumnSelector
+      disableColumnMenu
+      disableColumnSorting
       autosizeOnMount
     />
   )

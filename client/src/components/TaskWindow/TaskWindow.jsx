@@ -80,7 +80,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
     const { name, value } = event.target || {}
     setForm({
       ...form,
-      [name || 'dueDate']: value || moment(event).format('DD/MM/YYYY HH:mm')
+      [name || 'dueDate']: value || (name === 'dueDate' ? moment(event).format('DD/MM/YYYY HH:mm') : '')
     })
   }
 
@@ -102,9 +102,9 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
       <DialogContent>
         <Stack spacing={2}>
           <TextField
+            required
             autoFocus
             value={form.title}
-            required
             margin='dense'
             id='taskTitle'
             name='title'

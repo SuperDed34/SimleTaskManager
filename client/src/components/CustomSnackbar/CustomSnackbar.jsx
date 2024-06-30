@@ -1,4 +1,4 @@
-import { Snackbar, Alert, Slide } from "@mui/material"
+import { Snackbar, Alert} from "@mui/material"
 
 const CustomSnackbar = ({open, text, severity, onClose}) => {
 

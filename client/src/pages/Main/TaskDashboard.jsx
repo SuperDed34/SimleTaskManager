@@ -25,7 +25,6 @@ const TaskDashboard = ({mode}) => {
         setLoading(false)
         setUpdated(false)
       } catch (error) {
-        console.error('Error fetching tasks:', error)
         setSnackbar({open: true, text: `Here is problem:${error}`, severity:'error'})
         setLoading(false)
       }

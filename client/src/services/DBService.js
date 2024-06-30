@@ -1,6 +1,6 @@
 import axios from "axios"
   
-export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) => {
+export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) => {  
   try {
     onLoading(true)
     await axios.post('/api/tasks/add-task', task, {
@@ -12,8 +12,9 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) =>
       onUpdated(true)
     })   
   } catch (error) {
-    setSnackbar({open: true, text: `Error while add a task: ${error.response.data.message}`, severity: 'error'})
+    setSnackbar({open: true, text: `Error while add a task: ${error.response.data.errors[0].msg ?? error.response.data.message}`, severity: 'error'})
     onLoading(false)
+    throw error
   }
 }
 
@@ -26,7 +27,6 @@ export const deleteTaskHandler = async (taskId, onUpdated, onLoading, setSnackba
     setSnackbar({open: true, text: 'Task successfully removed', severity: 'success'})
     return response.data
   } catch (error) {
-    console.error('Error deleting task:', error)
     setSnackbar({open: true, text: `Error deleting task: ${error}`, severity: 'error'})
     throw error
   }
