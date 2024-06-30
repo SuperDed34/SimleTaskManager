@@ -5,6 +5,7 @@ const dateTimeFormatRegex = /^([0-2][0-9]|(3)[0-1])\/(0[1-9]|1[0-2])\/\d{4} ([0-
 exports.addTask = async (req, res, next) => {
   try {
     const { title, createdDate, dueDate, priority, status, description } = req.body
+          console.warn(dueDate)
 
     if (title.length === 0 || title === null || title === undefined) {
       throw new Error('Title must been filled')

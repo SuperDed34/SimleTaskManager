@@ -10,7 +10,7 @@ import {
   Stack,
   Slide
 } from '@mui/material'
-import { MobileDateTimePicker} from '@mui/x-date-pickers'
+import { DateTimePicker} from '@mui/x-date-pickers'
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import moment from 'moment'
 import 'moment/locale/en-gb'
@@ -49,7 +49,6 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
     description: ''
   })
   const [mode, setMode] = useState('new')
-//
   const handleClickOpen = (task = {}, mode = 'new', id) => {
     setForm({
       id: id || '',
@@ -80,7 +79,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
     const { name, value } = event.target || {}
     setForm({
       ...form,
-      [name || 'dueDate']: value || (name === 'dueDate' ? moment(event).format('DD/MM/YYYY HH:mm') : '')
+      [name || 'dueDate']: value || (name === undefined ? moment(event).format('DD/MM/YYYY HH:mm') : '')
     })
   }
 
@@ -122,7 +121,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
             alignItems="stretch"
             justifyContent='space-between'
           >
-            <MobileDateTimePicker
+            <DateTimePicker
               id='datePicker'
               name='dueDate'
               value={moment(form.dueDate, 'DD/MM/YYYY HH:mm')}
@@ -132,9 +131,9 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
               onChange={updateForm}
               onOpen={handleInitialValueForClock}
               viewRenderers={{
-            hours: renderTimeViewClock,
-            minutes: renderTimeViewClock,
-          }}
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+              }}
             />
             <Priorities
               required
