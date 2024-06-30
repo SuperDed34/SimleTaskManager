@@ -15,6 +15,7 @@ import TaskDashboard from './pages/Main/TaskDashboard'
 import ErrorPage from './pages/Error/ErrorPage'
 
 import './main.css'
+import globalStyles from './components/GlobalStyles'
 
 
 const router = createBrowserRouter([
@@ -40,7 +41,8 @@ const darkTheme = createTheme({
 ReactDOM.createRoot(document.getElementById('root')).render(
     <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale='en-gb'>
         <ThemeProvider theme={darkTheme}>
-            <CssBaseline/>
+            <CssBaseline />
+            {globalStyles}
             <RouterProvider router={router} />
         </ThemeProvider>
     </LocalizationProvider>

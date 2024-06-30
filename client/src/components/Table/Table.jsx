@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import moment from 'moment'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
 import CircleIcon from '@mui/icons-material/Circle'
 import { Box } from '@mui/material'
@@ -80,7 +80,13 @@ const TasksTable = ({
         },
       }}
       slots={{
-        noRowsOverlay:NoTasks 
+        noRowsOverlay: NoTasks,
+        toolbar: GridToolbar
+      }}
+      slotProps={{
+        toolbar: {
+          showQuickFilter: true,
+        }
       }}
       rows={tasks}
       columns={headers}
@@ -104,6 +110,8 @@ const TasksTable = ({
       checkboxSelection
       disableRowSelectionOnClick
       hideFooterSelectedRowCount
+      disableColumnFilter
+      disableColumnSelector
       autosizeOnMount
     />
   )
