@@ -25,7 +25,7 @@ exports.addTask = async (req, res, next) => {
       ) {
       throw new TypeError('Status and priotiry must be an object')
     } else if (Object.keys(priority).length !== 2
-      || Object.keys(status).length !== 2) {
+      || Object.keys(status).length < 2) {
       throw new RangeError('Status and priority must have only 2 params {label: string and color: a string color representation}')
     }
 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import moment from 'moment'
 import { DataGrid } from '@mui/x-data-grid'
 import IconButton from '@mui/material/IconButton'
@@ -8,10 +8,19 @@ import WhatshotIcon from '@mui/icons-material/Whatshot'
 import CircleIcon from '@mui/icons-material/Circle'
 import { Box } from '@mui/material'
 import { colors } from '../colors'
-import { deleteTaskHandler } from '../../services/DBService'
 import { openTaskForEdit } from '../../services/editTaskService'
 
-const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar, mode }) => {
+const TasksTable = ({
+  tasks,
+  loading,
+
+  onUpdated,
+  onEdit,
+  setChosenCells,
+  setSnackbar,
+  mode }) => {
+
+
   useEffect(() => {
     onUpdated(false)
   }, [loading])
@@ -39,20 +48,6 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar,
     </Box>  
   )
 
-  const renderEditButton = (params) => (
-    <SmallButton
-      mode='edit'
-      onClick={() => openTaskForEdit(params.id, onEdit, setSnackbar)}
-    />
-  )
-
-  const renderDeleteButton = (params) => (
-    <SmallButton
-      mode='delete'
-      onClick={() => deleteTaskHandler(params.id, onUpdated, onLoading, setSnackbar)}
-    />
-  )
-
   const renderCompletedDate = (params) => (
     <>
       {params.row.status.completeDate}
@@ -65,8 +60,6 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar,
     { field: 'createdDate', headerName: "CREATED DATE", flex: 2, editable: false },
     { field: 'dueDate', headerName: 'END DATE', flex: 2, editable: false },
     { field: 'status', headerName: 'STATUS', flex: 2, editable: true, renderCell: renderStatusCell },
-    { field: 'edit', headerName: 'EDIT', flex: 1, renderCell: renderEditButton },
-    { field: 'delete', headerName: 'DELETE', flex: 1, renderCell: renderDeleteButton },
   ]
 
   const tableHeaderCompletedDate = [
@@ -89,6 +82,13 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar,
         },
       }}
       rows={tasks}
+      onRowClick={(params) => {
+        openTaskForEdit(params.id, onEdit, setSnackbar)
+      }}
+
+      onRowSelectionModelChange={(model) => {
+        setChosenCells(model)
+      }}
       columns={headers}
       getRowId={(row) => row._id}
       getRowClassName={getRowClassName}
@@ -104,22 +104,10 @@ const TasksTable = ({ tasks, loading, onLoading, onUpdated, onEdit, setSnackbar,
       checkboxSelection
       disableRowSelectionOnClick
       hideFooterSelectedRowCount
+      autosizeOnMount
     />
   )
 }
 
 export default TasksTable;
 
-const SmallButton = ({ onClick, mode }) => (
-  <IconButton
-    sx={{
-      color: mode === 'delete' ? 'red' : 'green',
-      display: 'flex',
-      justifyContent: 'center',
-      height: '100%',
-    }}
-    onClick={onClick}
-  >
-    {mode === 'delete' ? <DeleteIcon /> : <EditIcon />}
-  </IconButton>
-)

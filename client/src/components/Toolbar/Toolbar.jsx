@@ -4,10 +4,13 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 
 import AddTaskIcon from '@mui/icons-material/AddTask'
-import { Divider } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { Badge, Divider, Fab } from '@mui/material'
 import { Link } from 'react-router-dom'
 
-const Toolbar = ({clickHandler, mode}) => {
+import { deleteTaskHandler } from '../../services/DBService'
+
+const Toolbar = ({clickHandler, mode, choosenCells, onUpdated, onLoading, setSnackbar}) => {
   return (
     <Grid
       container
@@ -42,6 +45,19 @@ const Toolbar = ({clickHandler, mode}) => {
         <Stack
           spacing={1}
           direction={'row'}>
+          <Fab
+            sx={{
+              visibility: choosenCells.length !== 0 ? 'visible' : 'hidden',
+              position: 'fixed',
+              right: 40,
+              bottom: 40
+            }}
+            color='error'
+            onClick={() => choosenCells.map((taskId) => deleteTaskHandler(taskId, onUpdated, onLoading, setSnackbar))}>
+            <Badge badgeContent={choosenCells.length} color='primary'>
+              <DeleteIcon/>
+            </Badge>
+          </Fab>
         </Stack>
       </Grid>
     </Grid>

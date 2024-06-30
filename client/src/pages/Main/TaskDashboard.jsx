@@ -10,6 +10,7 @@ import CustomSnackbar from '../../components/CustomSnackbar/CustomSnackbar';
 
 const TaskDashboard = ({mode}) => {
   const [clickHandler, setClickHandler] = useState(null)
+  const [choosenCells, setChoosenCells] = useState([])
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   const [updated, setUpdated] = useState(false)
@@ -20,13 +21,12 @@ const TaskDashboard = ({mode}) => {
       setLoading(true)
       try {
         const response = await axios.get('/api/getTasks/get-tasks')
-        console.log(response.data)
         setTasks(mode === 'main' ? filterContent(response.data) : filterContent(response.data, 'Complete' ,'include'))
         setLoading(false)
         setUpdated(false)
       } catch (error) {
         console.error('Error fetching tasks:', error)
-        setSnackbar({open: true, text: `Here is problem:${error}`, severity:'danger'})
+        setSnackbar({open: true, text: `Here is problem:${error}`, severity:'error'})
         setLoading(false)
       }
     }
@@ -55,13 +55,19 @@ const TaskDashboard = ({mode}) => {
         <Header/>
       </Grid>
       <Grid item xs={11} sx={{ mx: 1 }}>
-        <Toolbar clickHandler={clickHandler} mode={mode} />
+          <Toolbar
+            clickHandler={clickHandler}
+            onUpdated={setUpdated}
+            onLoading={setLoading}
+            setSnackbar={setSnackbar}
+            choosenCells={choosenCells}
+            mode={mode} />
         <TasksTable
           tasks={tasks}
           loading={loading}
-          onLoading={setLoading}
           onUpdated={setUpdated}
             onEdit={clickHandler}
+            setChosenCells={setChoosenCells}
             setSnackbar={setSnackbar}
             mode={mode}
           />
