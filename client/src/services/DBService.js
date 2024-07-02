@@ -1,6 +1,6 @@
 import axios from "axios"
   
-export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) => {  
+export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar, handleUpdate) => { 
   try {
     onLoading(true)
     await axios.post('/api/tasks/add-task', task, {
@@ -10,23 +10,31 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar) =>
     }).then(response => {
       setSnackbar({open: true, text: 'Task successfully added', severity: 'success'})
       onUpdated(true)
+      handleUpdate(response.data.task)
     })   
   } catch (error) {
-    setSnackbar({open: true, text: `Error while add a task: ${error.response.data.errors[0].msg ?? error.response.data.message}`, severity: 'error'})
+    console.log(error)
+    setSnackbar({open: true, text: `Error while add a task: ${error.response ? (error.response.data.errors[0].msg ?? error.response.data.message) : ''}`, severity: 'error'})
     onLoading(false)
     throw error
   }
 }
 
-export const deleteTaskHandler = async (taskId, onUpdated, onLoading, setSnackbar) => {
+export const deleteTaskHandler = async (taskIds, onUpdated, onLoading, setSnackbar, handleUpdate) => {
   try {
-    const response = await axios.delete(`/api/delete-task/${taskId}`)
-    onUpdated(true)
-    onLoading(true)
-    setSnackbar({open: true, text: 'Task successfully removed', severity: 'success'})
-    return response.data
+    await axios.post('/api/delete-task', taskIds, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      onUpdated(true)
+      onLoading(false)
+      setSnackbar({ open: true, text: 'Task successfully removed', severity: 'success' })
+      handleUpdate(taskIds, 'delete')
+    })
+
   } catch (error) {
-    setSnackbar({open: true, text: `Error deleting task: ${error}`, severity: 'error'})
+    setSnackbar({ open: true, text: `Error deleting task: ${error}`, severity: 'error' })
     throw error
   }
 }
@@ -41,7 +49,7 @@ export const getTask = async (taskId, setSnackbar) => {
   }
 }
 
-export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading, setSnackbar) => {
+export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading, setSnackbar, handleUpdate) => {
   onLoading(true)
   try {
     const response = await axios.post(`/api/editTask/edit-task/${taskId}`, updatedData, {
@@ -51,11 +59,13 @@ export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading,
     }).then(response => {
       setSnackbar({open: true, text: 'Task successfully edited', severity: 'success'})
       onUpdated(true)
+      console.log(response.data)
+      handleUpdate(response.data, 'change')
     })
 
   } catch (error) {
     onLoading(false)
-    setSnackbar({open: true, text: `${error.response.data.message}`, severity: 'error'})
+    setSnackbar({open: true, text: `${error}`, severity: 'error'})
     console.error(error)
   }
 }

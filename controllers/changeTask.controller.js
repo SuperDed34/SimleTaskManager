@@ -1,7 +1,7 @@
  const Task = require('../models/task.model');
 
 exports.changeTask = async (req, res, next) => {
-  const taskId = req.params.id;
+  const taskId = req.params.id
   try {
     const task = await Task.findByIdAndUpdate(taskId, req.body, { new: true })
     if (!task) {

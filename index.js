@@ -4,7 +4,7 @@ const app = require('./app')
 
 async function start() {
   try {
-    const dbURI = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}/?${process.env.CONNECTION_PARAMS}`;
+    const dbURI = `${process.env.URL}`
     await mongoose.connect(dbURI);
 
     const PORT = process.env.PORT

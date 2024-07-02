@@ -1,13 +1,11 @@
 const Task = require('../models/task.model')
 
 exports.deleteTask = async (req, res, next) => {
-  const taskId = req.params.id
   try {
-    const deletedTask = await Task.findByIdAndDelete(taskId)
-    if (!deletedTask) {
-      throw new Error('Internal Error in editing task, contact with administrator')
-    }
-    res.json({ message: 'Task deleted successfully', deletedTask })
+    const taskIds = req.body
+    const result = await Task.deleteMany({ _id: { $in: taskIds } })
+
+    res.status(200).json({ message: 'Tasks deleted successfully', deletedCount: result.deletedCount })
   } catch (error) {
     next(error)
   }

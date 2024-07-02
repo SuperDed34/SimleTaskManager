@@ -17,6 +17,7 @@ import 'moment/locale/en-gb'
 import Priorities from '../Priorities/Priorities'
 import Status from '../Status/Status'
 import { addTaskHandler, editTaskHandler } from '../../services/DBService'
+import {v4 as uuidv4} from 'uuid'
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -38,7 +39,7 @@ const statuses = [
   { label: 'Complete', color: 'green' }
 ]
 
-const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
+const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar, handleUpdate }) => {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -54,7 +55,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
       id: id || '',
       title: task.title || '',
       createdDate: task.createdDate || '',
-      dueDate: task.dueDate || {},
+      dueDate: task.dueDate || '',
       priority: task.priority || priorities[0],
       status: task.status || statuses[0],
       description: task.description || ''
@@ -175,7 +176,8 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
                 { ...form, createdDate: moment().format('DD/MM/YYYY HH:mm') },
                 onUpdated,
                 onLoading,
-                setSnackbar
+                setSnackbar,
+                handleUpdate
               )
               setOpen(false)
             }}
@@ -184,8 +186,8 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar }) => {
           </Button>
         ) : (
           <Button
-            onClick={() => {
-                editTaskHandler(form.id, form, onUpdated, onLoading, setSnackbar)
+              onClick={() => {
+                editTaskHandler(form.id, form, onUpdated, onLoading, setSnackbar, handleUpdate)
                 setOpen(false)
             }}
           >

@@ -15,7 +15,11 @@ const Status = ({ statusesList, onStatusChanged, value }) => {
   }, [value, status])
 
   const handleChange = (event, newValue) => {
-    newValue = newValue.label !== 'Complete' ? { ...newValue} : {...newValue, completeDate: moment().format('DD/MM/YYYY HH:mm')}
+    newValue = newValue
+      ? newValue.label !== 'Complete'
+        ? { ...newValue }
+        : { ...newValue, completeDate: moment().format('DD/MM/YYYY HH:mm') }
+      : statusesList[0]
     setStatus(newValue)
     onStatusChanged(newValue)
   }

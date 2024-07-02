@@ -30,11 +30,11 @@ exports.addTask = async (req, res, next) => {
       throw new RangeError('Status and priority must have only 2 params {label: string and color: a string color representation}')
     }
 
-    if (!(dueDate instanceof Object) && !dateTimeFormatRegex.test(dueDate)) {
+    if (!(dueDate instanceof Object) && !dateTimeFormatRegex.test(dueDate) && dueDate !=='') {
       throw new TypeError('Due date must be a string in format DD/MM/YYYY HH:ss') 
     }
 
-    const task = new Task({ title, createdDate, dueDate, priority, status, description })
+    const task = new Task({title, createdDate, dueDate, priority, status, description })
     await task.save();
     res.status(201).json({ message: 'Task was created and saved', task })
   } catch (error) {
