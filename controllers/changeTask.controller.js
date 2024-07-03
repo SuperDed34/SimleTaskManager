@@ -7,7 +7,7 @@ exports.changeTask = async (req, res, next) => {
     if (!task) {
       throw new Error(`Internal Error in editing task, contact with administrator`)
     }
-    res.status(200).json(task)
+    res.status(200).json({ message: `Task ${taskId} successfully changed` ,task })
   } catch (error) {
     next(error)
   }

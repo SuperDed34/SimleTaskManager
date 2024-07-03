@@ -8,7 +8,7 @@ export const addTaskHandler = async (task, onLoading, setSnackbar, handleUpdate)
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      setSnackbar({open: true, text: 'Task successfully added', severity: 'success'})
+      setSnackbar({open: true, text: response.data.message, severity: 'success'})
       handleUpdate(response.data.task)
     })   
   } catch (error) {
@@ -28,7 +28,7 @@ export const deleteTaskHandler = async (taskIds, onLoading, setSnackbar, handleU
       }
     }).then(response => {
       onLoading(false)
-      setSnackbar({ open: true, text: 'Task successfully removed', severity: 'success' })
+      setSnackbar({ open: true, text: response.data.message, severity: 'success' })
       handleUpdate(taskIds, 'delete')
     })
 
@@ -56,8 +56,8 @@ export const editTaskHandler = async (taskId, updatedData, onLoading, setSnackba
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      setSnackbar({open: true, text: 'Task successfully edited', severity: 'success'})
-      handleUpdate(response.data, 'change')
+      setSnackbar({open: true, text: response.data.message, severity: 'success'})
+      handleUpdate(response.data.task, 'change')
     })
 
   } catch (error) {
