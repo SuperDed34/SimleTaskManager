@@ -1,6 +1,6 @@
 import axios from "axios"
   
-export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar, handleUpdate) => { 
+export const addTaskHandler = async (task, onLoading, setSnackbar, handleUpdate) => { 
   try {
     onLoading(true)
     await axios.post('/api/tasks/add-task', task, {
@@ -9,7 +9,6 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar, ha
       }
     }).then(response => {
       setSnackbar({open: true, text: 'Task successfully added', severity: 'success'})
-      onUpdated(true)
       handleUpdate(response.data.task)
     })   
   } catch (error) {
@@ -20,14 +19,14 @@ export const addTaskHandler = async (task, onUpdated, onLoading, setSnackbar, ha
   }
 }
 
-export const deleteTaskHandler = async (taskIds, onUpdated, onLoading, setSnackbar, handleUpdate) => {
+export const deleteTaskHandler = async (taskIds, onLoading, setSnackbar, handleUpdate) => {
+  onLoading(true)
   try {
     await axios.post('/api/delete-task', taskIds, {
       headers: {
         'Content-Type': 'application/json'
       }
     }).then(response => {
-      onUpdated(true)
       onLoading(false)
       setSnackbar({ open: true, text: 'Task successfully removed', severity: 'success' })
       handleUpdate(taskIds, 'delete')
@@ -49,17 +48,15 @@ export const getTask = async (taskId, setSnackbar) => {
   }
 }
 
-export const editTaskHandler = async (taskId, updatedData, onUpdated, onLoading, setSnackbar, handleUpdate) => {
+export const editTaskHandler = async (taskId, updatedData, onLoading, setSnackbar, handleUpdate) => {
   onLoading(true)
   try {
-    const response = await axios.post(`/api/editTask/edit-task/${taskId}`, updatedData, {
+    await axios.post(`/api/editTask/edit-task/${taskId}`, updatedData, {
       headers: {
         'Content-Type': 'application/json'
       }
     }).then(response => {
       setSnackbar({open: true, text: 'Task successfully edited', severity: 'success'})
-      onUpdated(true)
-      console.log(response.data)
       handleUpdate(response.data, 'change')
     })
 

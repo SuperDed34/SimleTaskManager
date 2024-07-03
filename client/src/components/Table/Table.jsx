@@ -12,16 +12,11 @@ import NoTasks from './slots/NoTasks'
 const TasksTable = ({
   tasks,
   loading,
-  onUpdated,
   onEdit,
   setChosenCells,
   setSnackbar,
   mode
 }) => {
-
-  useEffect(() => {
-    onUpdated(false)
-  }, [loading, onUpdated])
 
   const getRowClassName = useCallback((params) => {
     const dueDate = params.row.dueDate ? moment(params.row.dueDate, 'DD/MM/YYYY HH:mm') : '';

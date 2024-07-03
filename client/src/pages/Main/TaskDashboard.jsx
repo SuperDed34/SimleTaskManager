@@ -13,7 +13,6 @@ const TaskDashboard = ({mode}) => {
   const [choosenCells, setChoosenCells] = useState([])
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState([])
-  const [updated, setUpdated] = useState(false)
   const [snackbar, setSnackbar] = useState({open: false, text: '', severity: ''})
 
   useEffect(() => {
@@ -21,7 +20,6 @@ const TaskDashboard = ({mode}) => {
     axios.get('/api/getTasks/get-tasks')
       .then((response) => {
       setTasks(response.data)
-      setUpdated(false)
       })
       .catch((error) => {
         setSnackbar({open: true, text: `Here is problem:${error}`, severity:'error'})
@@ -53,7 +51,6 @@ const TaskDashboard = ({mode}) => {
       const tasksAfterDeletion = tasksArray.filter(item => !newTask.includes(item._id))
       setTasks([...tasksAfterDeletion])
     }
-    setUpdated(true)
     setLoading(false)
   })
 
@@ -73,7 +70,6 @@ const TaskDashboard = ({mode}) => {
         <Toolbar
           clickHandler={clickHandler}
           handleUpdate={handleUpdate}
-          onUpdated={setUpdated}
           onLoading={setLoading}
           setSnackbar={setSnackbar}
           choosenCells={choosenCells}
@@ -81,7 +77,6 @@ const TaskDashboard = ({mode}) => {
         <TasksTable
           tasks={tasks}
           loading={loading}
-          onUpdated={setUpdated}
           onEdit={clickHandler}
           setChosenCells={setChoosenCells}
           setSnackbar={setSnackbar}
@@ -92,7 +87,6 @@ const TaskDashboard = ({mode}) => {
       <TaskWindow
         clickHandler={handleTaskWindowClick}
         handleUpdate={handleUpdate}
-        onUpdated={setUpdated}
         onLoading={setLoading}
         setSnackbar={setSnackbar}
         />

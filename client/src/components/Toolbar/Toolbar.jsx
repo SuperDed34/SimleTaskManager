@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 import { deleteTaskHandler } from '../../services/DBService'
 
-const Toolbar = ({clickHandler, mode, choosenCells, onUpdated, onLoading, setSnackbar, handleUpdate}) => {
+const Toolbar = ({clickHandler, mode, choosenCells, onLoading, setSnackbar, handleUpdate}) => {
   return (
     <Grid
       container
@@ -53,7 +53,7 @@ const Toolbar = ({clickHandler, mode, choosenCells, onUpdated, onLoading, setSna
               bottom: 40
             }}
             color='error'
-            onClick={() =>  deleteTaskHandler(choosenCells, onUpdated, onLoading, setSnackbar, handleUpdate)}>
+            onClick={() =>  deleteTaskHandler(choosenCells, onLoading, setSnackbar, handleUpdate)}>
             <Badge badgeContent={choosenCells.length} color='primary'>
               <DeleteIcon/>
             </Badge>

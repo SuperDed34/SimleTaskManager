@@ -39,7 +39,7 @@ const statuses = [
   { label: 'Complete', color: 'green' }
 ]
 
-const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar, handleUpdate }) => {
+const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -174,7 +174,6 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar, handleUpd
             onClick={() => {
               addTaskHandler(
                 { ...form, createdDate: moment().format('DD/MM/YYYY HH:mm') },
-                onUpdated,
                 onLoading,
                 setSnackbar,
                 handleUpdate
@@ -187,7 +186,7 @@ const TaskWindow = ({ clickHandler, onUpdated, onLoading, setSnackbar, handleUpd
         ) : (
           <Button
               onClick={() => {
-                editTaskHandler(form.id, form, onUpdated, onLoading, setSnackbar, handleUpdate)
+                editTaskHandler(form.id, form, onLoading, setSnackbar, handleUpdate)
                 setOpen(false)
             }}
           >
