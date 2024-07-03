@@ -50,6 +50,7 @@ const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
     description: ''
   })
   const [mode, setMode] = useState('new')
+
   const handleClickOpen = (task = {}, mode = 'new', id) => {
     setForm({
       id: id || '',
@@ -65,7 +66,7 @@ const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
   }
 
   const handleInitialValueForClock = () => {
-    form.dueDate instanceof Object 
+    form.dueDate === ''
       ? setForm({ ...form, dueDate: moment().set({ hour: 23, minute: 59 }).format('DD/MM/YYYY HH:mm') })
       : null
   }
