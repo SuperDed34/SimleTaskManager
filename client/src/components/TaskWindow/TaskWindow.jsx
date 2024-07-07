@@ -17,7 +17,7 @@ import 'moment/locale/en-gb'
 import Priorities from '../Priorities/Priorities'
 import Status from '../Status/Status'
 import { addTaskHandler, editTaskHandler } from '../../services/DBService'
-import {v4 as uuidv4} from 'uuid'
+import Responsible from '../Table/Responsible/Responsible';
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -39,7 +39,7 @@ const statuses = [
   { label: 'Complete', color: 'green' }
 ]
 
-const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
+const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate, workers }) => {
   const [open, setOpen] = useState(false)
   const [form, setForm] = useState({
     title: '',
@@ -57,6 +57,7 @@ const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
       title: task.title || '',
       createdDate: task.createdDate || '',
       dueDate: task.dueDate || '',
+      responsibleWorkers: workers.find(worker => worker._id === task.responsibleWorkers) ? workers.find(worker => worker._id === task.responsibleWorkers)._id : 'Unasigned',
       priority: task.priority || priorities[0],
       status: task.status || statuses[0],
       description: task.description || ''
@@ -146,6 +147,11 @@ const TaskWindow = ({ clickHandler, onLoading, setSnackbar, handleUpdate }) => {
               onChange={updateForm}
             />
           </Stack>
+          <Divider variant='inset' sx={{ height: 1 }} />
+          <Responsible
+            value={form.responsibleWorkers}
+            onChange={updateForm}
+            workers={workers} />
           <Divider variant='inset' sx={{ height: 1 }} />
           <Status
             required

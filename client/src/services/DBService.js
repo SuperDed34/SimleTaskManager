@@ -1,6 +1,7 @@
 import axios from "axios"
   
 export const addTaskHandler = async (task, onLoading, setSnackbar, handleUpdate) => { 
+  console.log(task)
   try {
     onLoading(true)
     await axios.post('/api/tasks/add-task', task, {

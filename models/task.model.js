@@ -7,8 +7,9 @@ const taskSchema = new Schema({
   createdDate: { type: Object, required: true },
   dueDate: { type: Object },
   priority: { type: Object, required: true },
+  responsibleWorkers: {type: String},
   status: { type: Object, required: true },
-  description: { type: String }
+  description: { type: String },
 }, { timestamps: true })
 
 module.exports = model('Task', taskSchema)

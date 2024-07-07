@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useCallback, useState } from 'react'
+import React, { useMemo, useCallback} from 'react'
 import moment from 'moment'
 import { DataGrid, GridToolbar } from '@mui/x-data-grid'
 import WhatshotIcon from '@mui/icons-material/Whatshot'
 import CircleIcon from '@mui/icons-material/Circle'
-import { Box } from '@mui/material'
+import { Box, Chip } from '@mui/material'
 import { colors } from '../colors'
 import { openTaskForEdit } from '../../services/editTaskService'
 import { filterContent } from '../../services/DBService'
@@ -11,6 +11,7 @@ import NoTasks from './slots/NoTasks'
 
 const TasksTable = ({
   tasks,
+  workers,
   loading,
   onEdit,
   setChosenCells,
@@ -43,6 +44,18 @@ const TasksTable = ({
     </Box>
   ), [])
 
+  const renderAssignedToCell = (params) => {
+    const workerName = workers.find(worker => worker._id === params.row.responsibleWorkers)
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Chip label={workerName
+          ? workerName.name
+          : 'Unassigned'
+        } />
+      </Box>
+    )
+  }
+
   const renderCompletedDate = useCallback((params) => (
     <>
       {params.row.status.completeDate}
@@ -54,8 +67,9 @@ const TasksTable = ({
     { field: 'priority', headerName: 'PRIORITY', flex: 2, editable: false, renderCell: renderPriorityCell },
     { field: 'createdDate', headerName: "CREATED DATE", flex: 2, editable: false },
     { field: 'dueDate', headerName: 'END DATE', flex: 2, editable: false },
+    { field: 'assignTo', headerName: 'ASSIGNED TO', flex:2, editable: false, renderCell:renderAssignedToCell},
     { field: 'status', headerName: 'STATUS', flex: 2, editable: true, renderCell: renderStatusCell },
-  ], [renderPriorityCell, renderStatusCell])
+  ], [renderPriorityCell, renderStatusCell, workers])
 
   const tableHeaderCompletedDate = useMemo(() => [
     { field: 'completedDate', headerName: 'COMPLETED AT', flex: 2, renderCell: renderCompletedDate },

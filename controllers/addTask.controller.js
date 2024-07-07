@@ -3,8 +3,9 @@ const Task = require('../models/task.model')
 const dateTimeFormatRegex = /^([0-2][0-9]|(3)[0-1])\/(0[1-9]|1[0-2])\/\d{4} ([0-1][0-9]|2[0-3]):([0-5][0-9])$/
 
 exports.addTask = async (req, res, next) => {
+  req.body
   try {
-    const { title, createdDate, dueDate, priority, status, description } = req.body
+    const { title, createdDate, dueDate, priority, status, description, responsibleWorkers } = req.body
           console.warn(dueDate)
 
     if (title.length === 0 || title === null || title === undefined) {
@@ -34,7 +35,7 @@ exports.addTask = async (req, res, next) => {
       throw new TypeError('Due date must be a string in format DD/MM/YYYY HH:ss') 
     }
 
-    const task = new Task({title, createdDate, dueDate, priority, status, description })
+    const task = new Task({title, createdDate, dueDate, priority, status, description, responsibleWorkers })
     await task.save();
     res.status(201).json({ message: 'Task was created and saved', task })
   } catch (error) {

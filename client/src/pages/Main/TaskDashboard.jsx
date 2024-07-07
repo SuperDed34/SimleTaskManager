@@ -13,21 +13,31 @@ const TaskDashboard = ({mode}) => {
   const [choosenCells, setChoosenCells] = useState([])
   const [loading, setLoading] = useState(true)
   const [tasks, setTasks] = useState([])
-  const [snackbar, setSnackbar] = useState({open: false, text: '', severity: ''})
+  const [snackbar, setSnackbar] = useState({ open: false, text: '', severity: '' })
+  const [workers, setWorkers] = useState([])
 
   useEffect(() => {
     setLoading(true)
+    axios.get('/api/getWorkers/get-workers')
+    .then((reponse) => {
+      setWorkers(reponse.data)
+    })
+    .catch((error) => {
+      setSnackbar({ open: true, text: `Here is problem: ${error}`, severity: 'error' })
+      setLoading(false)
+    })
+
     axios.get('/api/getTasks/get-tasks')
       .then((response) => {
-      setTasks(response.data)
+        setTasks(response.data)
       })
       .catch((error) => {
         setSnackbar({open: true, text: `Here is problem:${error}`, severity:'error'})
         setLoading(false)
       })
-    .finally(setLoading(false))
-
+      .finally(setLoading(false) )
   }, [])
+
 
   const handleTaskWindowClick = (handler) => {
     setClickHandler(handler)
@@ -76,6 +86,7 @@ const TaskDashboard = ({mode}) => {
           mode={mode} />
         <TasksTable
           tasks={tasks}
+          workers={workers}  
           loading={loading}
           onEdit={clickHandler}
           setChosenCells={setChoosenCells}
@@ -89,6 +100,7 @@ const TaskDashboard = ({mode}) => {
         handleUpdate={handleUpdate}
         onLoading={setLoading}
         setSnackbar={setSnackbar}
+        workers={workers}  
         />
       </Grid>
       <CustomSnackbar
